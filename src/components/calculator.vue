@@ -34,14 +34,28 @@
             </select>
           </div>
 
-          <div class="input-field">
-            <label>Commission (Total)</label>
-            <input 
-              type="number" 
-              v-model="commission" 
-              step="0.01"
-              placeholder="1.24"
-            >
+          <div class="input-row">
+            <div class="input-field half-width">
+              <label title="Commission">Commission (total)</label>
+              <input 
+                type="number" 
+                v-model="commission" 
+                step="0.01"
+                placeholder="1.24"
+              >
+            </div>
+            <div class="input-field half-width">
+              <label>Win Rate</label>
+              <select v-model="winRate">
+                <option 
+                  v-for="n in 13" 
+                  :key="n" 
+                  :value="(n * 5 + 35)"
+                >
+                  {{ n * 5 + 35 }}%
+                </option>
+              </select>
+            </div>
           </div>
         </div>
   
@@ -113,6 +127,7 @@
           MYR: 'RM',
           // Add any other known symbols here
         },
+        winRate: 60,  // default to 60%
       }
     },
     async created() {
@@ -197,7 +212,10 @@
         return this.isES ? 50 : 5
       },
       dailyPL() {
-        return (this.contracts * this.pointsMove * this.pointValue) - this.commission
+        const grossPL = this.contracts * this.pointsMove * this.pointValue;
+        const winAmount = grossPL * (this.winRate / 100);
+        const lossAmount = grossPL * ((100 - this.winRate) / 100) * -1;
+        return (winAmount + lossAmount) - this.commission;
       },
       monthlyIncome() {
         return this.dailyPL * 21 // Average trading days in a month
@@ -225,7 +243,7 @@
   }
   
   .calculator-container {
-    width: min(600px, 92vw);
+    width: min(800px, 96vw);
     margin: 0.25rem auto;
     padding: 0.5rem;
     border-radius: 12px;
@@ -269,6 +287,27 @@
     font-size: 0.95rem;
     color: black;
     width: 50%;
+    text-align-last: center;  /* This helps center text in dropdowns for some browsers */
+    -moz-text-align-last: center;  /* Firefox support */
+    -webkit-text-align-last: center;  /* Safari support */
+  }
+  
+  /* Ensure options within select are centered */
+  .input-field select option {
+    text-align: center;
+  }
+  
+  /* Ensure number inputs are centered */
+  .input-field input[type="number"] {
+    -moz-appearance: textfield;  /* Firefox */
+    text-align: center;
+  }
+  
+  /* Remove spinner buttons from number inputs while maintaining center alignment */
+  .input-field input[type="number"]::-webkit-inner-spin-button,
+  .input-field input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   
   .contract-type {
@@ -448,16 +487,15 @@
       margin: 0;
       min-width: 100%;
       overflow-x: hidden;
-      min-height: 100dvh;  /* Changed from 100vh to 100dvh for dynamic viewport height */
-      align-items: center;  /* Added to center vertically */
+      min-height: 100dvh;
+      align-items: center;
     }
   
     .calculator-container {
-      width: 90vw;
-      margin: 0rem auto;  /* Increased top/bottom margin from 0.5rem to 2rem */
-      margin-top: 0;  /* Remove negative margin */
+      width: 96vw;
+      margin: 0 auto;
       padding: 0.5rem;
-      transform: scale(0.95);  /* Slightly reduce overall size */
+      transform: none;
     }
   
     .currency-values {
@@ -470,8 +508,8 @@
     }
   
     .results {
-      padding: 0.5rem;  /* Reduce padding */
-      margin-bottom: 0.5rem;  /* Add some bottom margin */
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
     }
   
     .result-item {
@@ -482,51 +520,46 @@
     .currency-selector {
       gap: 0.5rem;
       font-size: 0.85rem;
-      margin: 0 auto;  /* Center the entire selector */
-      text-align: center;  /* Center the label text */
+      margin: 0 auto;
+      text-align: center;
     }
   
     .currency-selector select {
       min-width: auto;
       max-width: 100px;
-      margin: 0 auto;  /* Center the dropdown */
+      margin: 0 auto;
     }
   
     .last-updated {
       font-size: 0.7rem;
-      text-align: center;  /* Center the last updated text */
+      text-align: center;
     }
   
     .input-field input {
-      width: 60%;  /* Make input fields smaller on mobile */
-      margin: 0 auto;  /* Center the input box */
+      width: 60%;
+      margin: 0 auto;
     }
   
     h1 {
-      font-size: 1.5rem;  /* Reduce heading size */
-      margin-bottom: 1rem;  /* Reduce bottom margin */
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
   
     .input-group {
-      gap: 0.75rem;  /* Reduce gap between inputs */
+      gap: 0.75rem;
     }
   }
   
   /* Extra small screens */
   @media (max-width: 360px) {
     .calculator-container {
-      width: 88vw;
+      width: 98vw;
       padding: 0.4rem;
     }
   
     .currency-values span {
       min-width: 60px;
     }
-  }
-  
-  /* Remove the transform that was pushing content down */
-  .calculator-container {
-    transform: none;
   }
   
   .points-move-input {
@@ -570,8 +603,8 @@
     color: black;
     width: 50%;
     height: 28px;
-    margin: 0 auto;  /* Center the input */
-    display: block;  /* Ensures margin auto works */
+    margin: 0 auto;
+    display: block;
   }
   
   /* Base styles for mobile first */
@@ -586,21 +619,60 @@
   @media (min-width: 768px) {
     .input-field select,
     .input-field input {
-      height: 50px;          /* increased height for desktop */
-      padding: 0 0.5rem;     /* slightly more padding */
+      height: 50px;
+      padding: 0 0.5rem;
     }
 
     .points-move,
     select[v-model="contracts"] {
-      height: 36px;          /* match other inputs */
+      height: 36px;
     }
 
     .currency-selector select {
-      height: 40px;          /* match other inputs */
+      height: 40px;
     }
     .last-updated {
       font-size: 0.8rem;
       margin-bottom: 1.5rem;
+    }
+  }
+  
+  .input-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 70%;
+    margin: 0 auto;
+  }
+  
+  .half-width {
+    width: 50%;
+  }
+  
+  .half-width input,
+  .half-width select {
+    width: 100% !important;
+    height: 28px;
+    font-size: 0.95rem;
+  }
+  
+  /* Landscape/Desktop adjustments */
+  @media (min-width: 768px) {
+    .half-width input,
+    .half-width select {
+      height: 36px;
+    }
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 480px) {
+    .input-row {
+      gap: 0.7rem;
+    }
+    
+    .half-width input,
+    .half-width select {
+      font-size: 0.9rem;
     }
   }
   </style>
