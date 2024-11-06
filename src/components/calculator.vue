@@ -16,22 +16,22 @@
   
           <div class="input-field">
             <label>Number of Contracts</label>
-            <input 
-              type="number" 
-              v-model="contracts" 
-              min="1"
-              placeholder="1"
-            >
+            <select v-model="contracts">
+              <option v-for="n in 50" :key="n" :value="n">{{ n }}</option>
+            </select>
           </div>
   
           <div class="input-field">
             <label>Points Move</label>
-            <input 
-              type="number" 
-              v-model="pointsMove" 
-              step="0.25"
-              placeholder="1"
-            >
+            <select v-model="pointsMove" class="points-move">
+              <option 
+                v-for="n in 2000" 
+                :key="n" 
+                :value="n * 0.25"
+              >
+                {{ (n * 0.25).toFixed(2) }}
+              </option>
+            </select>
           </div>
 
           <div class="input-field">
@@ -40,7 +40,7 @@
               type="number" 
               v-model="commission" 
               step="0.01"
-              placeholder="0"
+              placeholder="1.24"
             >
           </div>
         </div>
@@ -96,6 +96,7 @@
         contracts: 1,
         pointsMove: 1,
         isES: false,
+        commission: 1.24,
         selectedCurrency: 'MYR',
         conversionRates: {},
         isLoading: true,
@@ -109,7 +110,6 @@
           MYR: 'RM',
           // Add any other known symbols here
         },
-        commission: 0,
       }
     },
     async created() {
@@ -217,8 +217,9 @@
   
   .calculator-container {
     width: min(600px, 92vw);
-    margin: 1rem auto;
-    padding: 1rem;
+    margin: 0.5rem auto;
+    margin-top: 2rem;
+    padding: 0.75rem;
     border-radius: 12px;
     background: white;
     color: black;
@@ -226,30 +227,32 @@
   
   h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
   
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
   }
   
   .input-field {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
     text-align: center;
     color: black;
+    position: relative;
   }
   
   .input-field label {
     text-align: center;  /* Center the label text */
   }
   
-  .input-field input {
-    padding: 0.75rem;
+  .input-field input,
+  .input-field select {
+    padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     text-align: center;
@@ -261,7 +264,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
   }
   
   .switch {
@@ -338,7 +341,7 @@
   
   .results {
     background: #f8f9fa;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 8px;
   }
   
@@ -368,8 +371,8 @@
   .currency-selector {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
     max-width: 200px;
     margin-left: auto;
     text-align: center;
@@ -393,17 +396,17 @@
     text-align: right;
     width: 100%;
     white-space: nowrap;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   
   /* Media query for landscape/wider screens */
   @media (min-width: 768px) {
     .calculator-container {
-      padding: 2rem;
+      padding: 1rem;
     }
     
     .input-group {
-      gap: 1.5rem;
+      gap: 0.75rem;
     }
   }
   
@@ -493,6 +496,29 @@
   /* Remove the transform that was pushing content down */
   .calculator-container {
     transform: none;
+  }
+  
+  .points-move-input {
+    display: none;
+  }
+  
+  .points-move:focus + .points-move-input {
+    display: block;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+  }
+  
+  .input-field select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+    color: black;
+    background-color: rgb(244, 244, 244);
+    width: 60%;
+    margin: 0 auto;
   }
   </style>
   
