@@ -33,6 +33,16 @@
               placeholder="1"
             >
           </div>
+
+          <div class="input-field">
+            <label>Commission (Total)</label>
+            <input 
+              type="number" 
+              v-model="commission" 
+              step="0.01"
+              placeholder="0"
+            >
+          </div>
         </div>
   
         <div class="currency-selector">
@@ -98,7 +108,8 @@
           AUD: 'A$',
           MYR: 'RM',
           // Add any other known symbols here
-        }
+        },
+        commission: 0,
       }
     },
     async created() {
@@ -177,7 +188,7 @@
         return this.isES ? 50 : 5
       },
       dailyPL() {
-        return this.contracts * this.pointsMove * this.pointValue
+        return (this.contracts * this.pointsMove * this.pointValue) - this.commission
       },
       monthlyIncome() {
         return this.dailyPL * 21 // Average trading days in a month
