@@ -299,7 +299,6 @@
   
   /* Ensure number inputs are centered */
   .input-field input[type="number"] {
-    -moz-appearance: textfield;  /* Firefox */
     text-align: center;
   }
   
@@ -667,6 +666,7 @@
   /* Mobile adjustments */
   @media (max-width: 480px) {
     .input-row {
+      width: 95%;
       gap: 0.7rem;
     }
     
