@@ -16,7 +16,7 @@
   
           <div class="input-field">
             <label>Number of Contracts</label>
-            <select v-model="contracts">
+            <select v-model="contracts" class="points-move">
               <option v-for="n in 50" :key="n" :value="n">{{ n }}</option>
             </select>
           </div>
@@ -63,24 +63,27 @@
   
         <div class="results">
           <div class="result-item">
-            <span>Daily P/L:</span>
+            <div class="result-label">Daily P/L</div>
             <div class="currency-values">
-              <span>${{ dailyPL.toFixed(2) }}</span>
-              <span>{{ currencySymbol }}{{ (dailyPL * conversionRate).toFixed(2) }}</span>
+              <span class="primary-currency">${{ formatNumber(dailyPL) }}</span>
+              <span class="separator">|</span>
+              <span class="secondary-currency">{{ currencySymbol }}{{ formatNumber(dailyPL * conversionRate) }}</span>
             </div>
           </div>
           <div class="result-item">
-            <span>Monthly Income:</span>
+            <div class="result-label">Monthly Income</div>
             <div class="currency-values">
-              <span>${{ monthlyIncome.toFixed(2) }}</span>
-              <span>{{ currencySymbol }}{{ (monthlyIncome * conversionRate).toFixed(2) }}</span>
+              <span class="primary-currency">${{ formatNumber(monthlyIncome) }}</span>
+              <span class="separator">|</span>
+              <span class="secondary-currency">{{ currencySymbol }}{{ formatNumber(monthlyIncome * conversionRate) }}</span>
             </div>
           </div>
           <div class="result-item">
-            <span>Annual Income:</span>
+            <div class="result-label">Annual Income</div>
             <div class="currency-values">
-              <span>${{ annualIncome.toFixed(2) }}</span>
-              <span>{{ currencySymbol }}{{ (annualIncome * conversionRate).toFixed(2) }}</span>
+              <span class="primary-currency">${{ formatNumber(annualIncome) }}</span>
+              <span class="separator">|</span>
+              <span class="secondary-currency">{{ currencySymbol }}{{ formatNumber(annualIncome * conversionRate) }}</span>
             </div>
           </div>
         </div>
@@ -180,7 +183,13 @@
       },
       getCurrencySymbol(currency) {
         return this.commonSymbols[currency] || currency
-      }
+      },
+      formatNumber(value) {
+        return new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).format(value);
+      },
     },
     computed: {
       // ES is $50 per point, MES is $5 per point
@@ -217,9 +226,8 @@
   
   .calculator-container {
     width: min(600px, 92vw);
-    margin: 0.5rem auto;
-    margin-top: 2rem;
-    padding: 0.75rem;
+    margin: 0.25rem auto;
+    padding: 0.5rem;
     border-radius: 12px;
     background: white;
     color: black;
@@ -227,20 +235,21 @@
   
   h1 {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
   }
   
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
   }
   
   .input-field {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.15rem;
     text-align: center;
     color: black;
     position: relative;
@@ -248,16 +257,18 @@
   
   .input-field label {
     text-align: center;  /* Center the label text */
+    font-size: 0.9rem;
   }
   
   .input-field input,
   .input-field select {
-    padding: 0.5rem;
+    padding: 0.4rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: black;
+    width: 50%;
   }
   
   .contract-type {
@@ -270,8 +281,8 @@
   .switch {
     position: relative;
     display: inline-block;
-    width: 200px;  /* Increased width */
-    height: 50px;  /* Increased height */
+    width: 160px;
+    height: 40px;
   }
   
   .switch input {
@@ -299,8 +310,8 @@
   .slider:before {
     position: absolute;
     content: "";
-    height: 42px;  /* Increased height */
-    width: 100px;  /* Increased width */
+    height: 34px;
+    width: 80px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -314,7 +325,7 @@
   }
   
   input:checked + .slider:before {
-    transform: translateX(92px);  /* Adjusted translation */
+    transform: translateX(72px);
   }
   
   .option {
@@ -341,27 +352,45 @@
   
   .results {
     background: #f8f9fa;
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 8px;
   }
   
   .result-item {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-    color: black;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  
+  .result-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    color: #666;
   }
   
   .currency-values {
     display: flex;
-    gap: 1.5rem;  /* Space between USD and EUR values */
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  .primary-currency {
     font-weight: bold;
   }
   
-  .currency-values span {
-    min-width: 120px;  /* Ensures consistent width for numbers */
-    text-align: right;
+  .secondary-currency {
+    color: #666;
+    font-weight: normal;
+  }
+  
+  .separator {
+    color: #ddd;
+    font-weight: 300;
+    padding: 0 0.25rem;
   }
   
   .result-item:last-child {
@@ -371,32 +400,34 @@
   .currency-selector {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    margin-bottom: 1rem;
+    gap: 0.15rem;
+    margin-bottom: 0.75rem;
     max-width: 200px;
-    margin-left: auto;
+    margin: 0 auto;  /* Center the currency selector */
     text-align: center;
   }
   
   .currency-selector select {
-    padding: 0.5rem;
+    padding: 0.4rem;
     border: 1px solid #ddd;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: black;
     background-color: rgb(244, 244, 244);
     width: auto;
     min-width: 120px;
     text-align: center;
+    margin: 0 auto;  /* Center the dropdown */
+    display: block;  /* Ensures margin auto works */
   }
   
   .last-updated {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #666;
-    text-align: right;
+    text-align: center;  /* Center the last updated text */
     width: 100%;
     white-space: nowrap;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
   }
   
   /* Media query for landscape/wider screens */
@@ -510,15 +541,67 @@
   }
   
   .input-field select {
-    padding: 0.75rem;
+    padding: 0.25rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: black;
     background-color: rgb(244, 244, 244);
-    width: 60%;
+    width: 50%;
+    height: 32px;
     margin: 0 auto;
+  }
+  
+  /* Specific styling for contracts and points move */
+  .points-move,
+  select[v-model="contracts"] {
+    height: 28px;
+    padding: 0 0.25rem;
+    min-height: unset;
+  }
+  
+  .input-field input {
+    padding: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: black;
+    width: 50%;
+    height: 28px;
+    margin: 0 auto;  /* Center the input */
+    display: block;  /* Ensures margin auto works */
+  }
+  
+  /* Base styles for mobile first */
+  .input-field select,
+  .input-field input {
+    height: 28px;
+    padding: 0 0.25rem;
+    min-height: unset;
+  }
+  
+  /* Landscape/Desktop adjustments */
+  @media (min-width: 768px) {
+    .input-field select,
+    .input-field input {
+      height: 50px;          /* increased height for desktop */
+      padding: 0 0.5rem;     /* slightly more padding */
+    }
+
+    .points-move,
+    select[v-model="contracts"] {
+      height: 36px;          /* match other inputs */
+    }
+
+    .currency-selector select {
+      height: 40px;          /* match other inputs */
+    }
+    .last-updated {
+      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
   }
   </style>
   
