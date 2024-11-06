@@ -414,15 +414,16 @@
       margin: 0;
       min-width: 100%;
       overflow-x: hidden;
-      min-height: 100vh;  /* Added to help with vertical centering */
+      min-height: 100dvh;  /* Changed from 100vh to 100dvh for dynamic viewport height */
       align-items: center;  /* Added to center vertically */
     }
   
     .calculator-container {
       width: 90vw;
       margin: 0rem auto;  /* Increased top/bottom margin from 0.5rem to 2rem */
-      margin-top: -4rem;
+      margin-top: 0;  /* Remove negative margin */
       padding: 0.5rem;
+      transform: scale(0.95);  /* Slightly reduce overall size */
     }
   
     .currency-values {
@@ -435,7 +436,8 @@
     }
   
     .results {
-      padding: 0.75rem;
+      padding: 0.5rem;  /* Reduce padding */
+      margin-bottom: 0.5rem;  /* Add some bottom margin */
     }
   
     .result-item {
@@ -464,6 +466,15 @@
     .input-field input {
       width: 60%;  /* Make input fields smaller on mobile */
       margin: 0 auto;  /* Center the input box */
+    }
+  
+    h1 {
+      font-size: 1.5rem;  /* Reduce heading size */
+      margin-bottom: 1rem;  /* Reduce bottom margin */
+    }
+  
+    .input-group {
+      gap: 0.75rem;  /* Reduce gap between inputs */
     }
   }
   
