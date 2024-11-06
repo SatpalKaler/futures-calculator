@@ -229,13 +229,19 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    text-align: center;
     color: black;
+  }
+  
+  .input-field label {
+    text-align: center;  /* Center the label text */
   }
   
   .input-field input {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 6px;
+    text-align: center;
     font-size: 1rem;
     color: black;
   }
@@ -302,6 +308,9 @@
     font-weight: bold;
     z-index: 2;
     transition: .4s;
+    text-transform: uppercase;
+    width: 40%;
+    text-align: center;
   }
   
   .mes {
@@ -333,6 +342,7 @@
   .currency-values {
     display: flex;
     gap: 1.5rem;  /* Space between USD and EUR values */
+    font-weight: bold;
   }
   
   .currency-values span {
@@ -351,6 +361,7 @@
     margin-bottom: 1.5rem;
     max-width: 200px;
     margin-left: auto;
+    text-align: center;
   }
   
   .currency-selector select {
@@ -362,6 +373,7 @@
     background-color: rgb(244, 244, 244);
     width: auto;
     min-width: 120px;
+    text-align: center;
   }
   
   .last-updated {
@@ -370,6 +382,7 @@
     text-align: right;
     width: 100%;
     white-space: nowrap;
+    margin-bottom: 1rem;
   }
   
   /* Media query for landscape/wider screens */
@@ -396,7 +409,8 @@
   
     .calculator-container {
       width: 90vw;
-      margin: 2rem auto;  /* Increased top/bottom margin from 0.5rem to 2rem */
+      margin: 0rem auto;  /* Increased top/bottom margin from 0.5rem to 2rem */
+      margin-top: -4rem;
       padding: 0.5rem;
     }
   
@@ -406,7 +420,7 @@
   
     .currency-values span {
       min-width: 65px;
-      font-size: 0.85rem;
+      font-size: 1.1rem;
     }
   
     .results {
@@ -414,22 +428,31 @@
     }
   
     .result-item {
-      font-size: 0.85rem;
+      font-size: .95rem;
     }
   
     /* Make currency selector more compact */
     .currency-selector {
       gap: 0.5rem;
       font-size: 0.85rem;
+      margin: 0 auto;  /* Center the entire selector */
+      text-align: center;  /* Center the label text */
     }
   
     .currency-selector select {
-      min-width: auto;  /* Remove min-width constraint */
-      max-width: 100px;  /* Limit maximum width */
+      min-width: auto;
+      max-width: 100px;
+      margin: 0 auto;  /* Center the dropdown */
     }
   
     .last-updated {
       font-size: 0.7rem;
+      text-align: center;  /* Center the last updated text */
+    }
+  
+    .input-field input {
+      width: 60%;  /* Make input fields smaller on mobile */
+      margin: 0 auto;  /* Center the input box */
     }
   }
   
